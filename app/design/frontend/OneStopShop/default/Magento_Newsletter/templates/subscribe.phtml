@@ -1,0 +1,55 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magento\Newsletter\Block\Subscribe $block */
+?>
+<div class="block newsletter footer__newsletter">
+    <div class="content">
+
+        <?php
+            echo $this->getLayout()
+            ->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId('oos_newsletter_footer')
+            ->toHtml();
+        ?>
+
+        <form class="form subscribe"
+            novalidate
+            action='<?= $block->escapeUrl($block->getFormActionUrl()) ?>'
+            method="post"
+            data-mage-init='{"validation": {"errorClass": "mage-error"}}'
+            id="newsletter-validate-detail">
+            <div class="field newsletter">
+                <div class="control">
+                  <input name="formid" type="hidden" id="formid" value="295" />
+                </div>
+                <div class="control">
+                  <input name="email" type="email" id="newsletter"
+                          placeholder="<?= $block->escapeHtml(__('enter @email')) ?>"
+                          data-mage-init='{"mage/trim-input":{}}'
+                          data-validate="{required:true, 'validate-email':true}"
+                  />
+                </div>
+            </div>
+            <div class="actions">
+                <button class="action subscribe primary"
+                        title="<?= $block->escapeHtmlAttr(__('Subscribe')) ?>"
+                        type="submit"
+                        aria-label="Subscribe">
+                    <span><?= $block->escapeHtml(__('sign me up')) ?></span>
+                </button>
+            </div>
+        </form>
+        <p class="small-copy">For details on how we use the information you provide to us please see our <a href="#">Privacy Policy</a></p>
+        <div class="footer__contact">
+            <div class="footer__socials">
+                <a href="#"><img src="<?php echo $this->getViewFileUrl('images/icons/icon-instagram.svg')?>"></a>
+                <a href="#"><img src="<?php echo $this->getViewFileUrl('images/icons/icon-tiktok.svg')?>"></a>
+                <p>Follow us</p>
+            </div>
+        </div>
+    </div>
+</div>

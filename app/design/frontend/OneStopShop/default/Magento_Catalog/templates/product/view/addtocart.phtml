@@ -1,0 +1,185 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Catalog\Block\Product\View;
+use NouveauLashes\CustomerTraining\Helper\Training;
+use Pinpoint\BookingTraining\Helper\Data as BookingTrainingHelper;
+use Pinpoint\ProductList\Helper\Data as ProductListHelper;
+
+/** @var $block View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Add to Bag'); ?>
+<?php $storeId = $this->helper(ProductListHelper::class)->getStore()->getStoreId(); ?>
+<?php $isTrainingEnabled = $this->helper(BookingTrainingHelper::class)->isEnabled(); ?>
+<?php $trainingHelper = $this->helper(Training::class); ?>
+<?php $isTrainingProduct = $_product->getIsTraining(); ?>
+
+<?php if ($_product->isSaleable()) :?>
+    <?php if ($block->shouldRenderQuantity()) :?>
+        <div class="field qty">
+            <div class="control">
+                <div id="minus-button" class="qty-box" onclick="quantityChange(this,'subtract')"><div class="icon--minus"></div></div>
+                <input type="number"
+                       pattern="[0-9]*"
+                       name="qty"
+                       id="qty"
+                       value="<?= /* @escapeNotVerified */ $block->getProductDefaultQty() * 1 ?>"
+                       title="<?= /* @escapeNotVerified */ __('Qty') ?>"
+                       class="input-text qty"
+                       data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                />
+                <div id="plus-button" class="qty-box" onclick="quantityChange(this,'add')"><div class="icon--plus"></div></div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php $trainingAvailable = $isTrainingProduct && $isTrainingEnabled ?>
+    <?php if($trainingAvailable): ?>
+        <?php $bookingIsNotAvailableCmsBlock = $this->getLayout()
+            ->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId(BookingTrainingHelper::BOOKING_IS_NOT_AVAILABLE_BLOCK_ID)
+            ->toHtml(); ?>
+        <?php $bookingAvailableButPhoneCmsBlock = $this->getLayout()
+            ->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId(BookingTrainingHelper::BOOKING_IS_AVAILABLE_BUT_PHONE_BLOCK_ID)
+            ->toHtml(); ?>
+        <div id="booking-not-available" style="display: none;">
+            <?php echo $bookingIsNotAvailableCmsBlock; ?>
+        </div>
+        <div id="booking-available-notice-please-phone" style="display: none;">
+            <?php echo $bookingAvailableButPhoneCmsBlock; ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="box-tocart" data-bind="scope: 'customer'">
+        <div class="fieldset">
+            <?php if($_product->getTermsAndConditions()): ?>
+                <div class="product-options-wrapper terms-and-conditions-wrapper field required checkbox-input" >
+                    <div class="control">
+                        <div class="options-list nested">
+                            <div class="field choice admin__field admin__field-option" data-title="I agree to the Terms & Conditions">
+                                <input type="checkbox" class="checkbox admin__control-checkbox required product-custom-option"
+                                    name="" id="terms" value="1" price="0" aria-required="true" aria-invalid="true">
+                                <label class="label admin__field-label" for="terms">
+                                    <?php echo $_product->getTermsAndConditions(); ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <?php if($trainingAvailable): ?>
+                <div class="actions">
+                    <button type="button" data-bind="click: bookingTraining" id="product-addtocart-button"
+                        class="action primary tocart" disabled>
+                        <?= $block->escapeHtml($buttonTitle) ?>
+                    </button>
+                </div>
+            <?php else: ?>
+                <div class="actions">
+                    <button type="submit"
+                            title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
+                            class="action primary tocart"
+                            id="product-addtocart-button" disabled>
+                        <span><?= $block->escapeHtml($buttonTitle) ?></span>
+                    </button>
+
+                    <?php if ($_product->getTypeId() === 'simple'): ?>
+                        <button type="submit"
+                                title="<?= $block->escapeHtmlAttr('Add To Bag') ?>"
+                                class="action primary tocart fixed-tocart" disabled>
+                            <span><?= $block->escapeHtml('Add To Bag') ?></span>
+                        </button>
+                    <?php else: ?>
+                        <button type="button"
+                                title="<?= $block->escapeHtmlAttr('Add To Bag') ?>"
+                                class="action primary tocart fixed-tocart scroll" disabled>
+                            <span><?= $block->escapeHtml('Add To Bag') ?></span>
+                        </button>
+                    <?php endif; ?>
+
+                    <?= $block->getChildHtml('', true) ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <div
+        class="pay-later-container"
+        data-pp-message
+        data-pp-style-layout="text"
+        data-pp-style-logo-type="inline"
+        data-pp-style-text-color="black">
+    </div>
+<?php else: ?>
+    <div class="box-tocart">
+        <div class="fieldset">
+            <div class="actions">
+                <span class="action primary">
+                    <span><?= __('Out of Stock'); ?></span>
+                </span>
+
+                <?= $block->getChildHtml('', true) ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+</script>
+
+<script>
+    let quantityChange = function(el,direction){
+        let target = (direction === "subtract") ? el.nextElementSibling : el.previousElementSibling,
+            minusStyle = target.previousElementSibling;
+
+        (direction === "subtract") ? target.value-- : target.value++;
+        
+        if(target.value<=0){
+            target.value=0;
+            minusStyle.style.opacity = '.3';
+            minusStyle.style.cursor="default";
+        }else{
+            minusStyle.style.opacity = '1';
+            minusStyle.style.cursor="pointer";
+        }
+    };
+</script>
+
+<script>
+    //require(['jquery', 'stickyCta'], function($, stickyCta){
+        //document.addEventListener('scroll', stickyCta.stickyScroller);
+
+        //let scrollToCta =  $('.fixed-tocart.scroll');
+        //if (scrollToCta !== undefined) {
+            //$('.box-tocart').on('click', '.fixed-tocart.scroll', function () {
+                //$('html, body').animate({
+                   // scrollTop: $('.page-title-wrapper').offset().top - 100
+                //}, 1000);
+            //});
+        //}
+    //});
+
+//Fixed button appears on scroll
+require(['jquery', 'jquery/ui'], function($){
+
+  $(document).ready(function(){
+    $(window).on("scroll",function() {
+        if($(this).scrollTop() > 200) {
+        $("button.action.tocart.primary.fixed-tocart").addClass("visible");
+      }
+      else {
+        $("button.action.tocart.primary.fixed-tocart").removeClass("visible");
+      }
+    });
+  });
+  
+});
+</script>

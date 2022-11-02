@@ -1,0 +1,40 @@
+<?php /** @var \Snowdog\Menu\Block\NodeType\CustomUrl $block */ ?>
+<?php
+$attributes = [];
+$class = $block->getMenuClass();
+$categoryNodeImage = $this->helper(Pinpoint\Snowdog\Helper\Image::class)->getImageUrl($block->getNodeImage());
+if ($block->getIsViewAllLink()) {
+  $title = $block->getTitle();
+  $classLink = $class . '__inner-link inner-list-header';
+} else {
+    $classLink = $block->getIsRoot() ? $class . '__link' : $class . '__inner-link';
+    $title = $block->getTitle();
+    if ($block->getId()) {
+        $attributes[] = 'data-menu="menu-' . $block->getId() . '"';
+    }
+}
+$attributes[] = 'class="' . $classLink . '"';
+
+if ($block->getTarget()) {
+    $attributes[] = 'target="__blank" rel="noopener"';
+}
+?>
+<a
+<?php if ($block->getIsParent() && !$block->getIsViewAllLink()): ?>
+  id="parent"
+<?php endif ?>
+href="<?= $block->getContent() ?>" <?= implode(' ', $attributes) ?>>
+<?php if($categoryNodeImage) : ?>
+  <div class="menu-item__icon">
+    <img src="<?= $categoryNodeImage; ?>" />
+  </div>
+<?php endif; ?>
+<span class="title">
+  <?= $title ?>
+  <?php if ($block->getIsParent() && !$block->getIsViewAllLink()): ?>
+    <span title="view more" class="<?= $class ?>__icon">
+
+    </span>
+  <?php endif ?>
+</span>
+</a>

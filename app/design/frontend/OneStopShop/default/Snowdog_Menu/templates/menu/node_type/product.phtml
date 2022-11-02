@@ -1,0 +1,38 @@
+<?php /** @var \Snowdog\Menu\Block\NodeType\Product $block */ ?>
+<?php
+$nodeId = $block->getId();
+$class = $block->getMenuClass();
+$productUrl = $block->getProductUrl($nodeId);
+$productPrice = $block->getProductPrice($nodeId);
+$formattedProductPrice = $block->getFormattedProductPrice($nodeId);
+$productImage = $block->getProductImage($nodeId);
+$productTitle = $block->getProductTitle($nodeId);
+$categoryNodeImage = $this->helper(Pinpoint\Snowdog\Helper\Image::class)->getImageUrl($block->getNodeImage());
+$productUrl = $productUrl ?: '#';
+$dataAttribute = '';
+$classLink = $block->getIsRoot() ? $class . '__link' : $class . '__inner-link';
+$title = $block->getTitle();
+
+if ($nodeId) {
+    $dataAttribute = ' data-menu="menu-' . $nodeId . '"';
+}
+
+if ($block->isCurrentProduct($nodeId)) {
+    $classLink .= ' current';
+}
+?>
+
+<a
+  href="<?= $productUrl ?>"
+  class="<?= $classLink ?>"
+  <?= $dataAttribute ?>
+>
+  <?php if($categoryNodeImage) : ?>
+    <div class="menu-item__icon">
+      <img src="<?= $categoryNodeImage; ?>" />
+    </div>
+  <?php endif; ?>
+  <span>
+    <?= $title ?>
+  </span>
+</a>

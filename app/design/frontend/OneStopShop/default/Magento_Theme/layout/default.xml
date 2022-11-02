@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="default_head_blocks"/>
+    <body>
+
+		<referenceContainer name="header.container">
+            <block class="Magento\Framework\View\Element\Template" name="banner" template="Magento_Theme::html/header/ribbon-banner.phtml" before="-" />
+		</referenceContainer>
+
+        <referenceBlock name="header.panel.wrapper" remove="true" />
+
+        <referenceContainer name="header-wrapper">
+
+            <container name="menu.wrapper" htmlTag="div" htmlClass="menu__wrapper" before="-">
+                <container name="menu.toggles" htmlTag="div" htmlClass="menu-toggles" before="-">
+                    <block class="Magento\Theme\Block\Html\Header" name="top.header" template="Magento_Theme::ossheader.phtml" before="-" />
+                    <block name="oss-main-menu" class="Snowdog\Menu\Block\Menu">
+                        <arguments>
+                            <argument name="menu" xsi:type="string">oss-main-menu</argument>
+                        </arguments>
+                    </block>
+                    <block name="oos.main.menu.footer" class="Snowdog\Menu\Block\Menu">
+                        <arguments>
+                            <argument name="menu" xsi:type="string">oos-main-menu-footer</argument>
+                        </arguments>
+                    </block>
+                    <block name="oos.main.menu.learn" class="Snowdog\Menu\Block\Menu">
+                        <arguments>
+                            <argument name="menu" xsi:type="string">oss-main-menu-learn</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Framework\View\Element\Template" name="search.toggle" template="Magento_Theme::html/header/search-toggle.phtml" after="nav.toggle"  />
+                </container>
+
+                <block class="Magento\Theme\Block\Html\Header\Logo" name="logo"/>
+                
+                <container name="header.account.container" htmlTag="div" htmlClass="header-account-container" after="menu.toggles">
+                    <block class="Magento\Framework\View\Element\Template" name="my-account-link" template="Magento_Customer::my-account-link.phtml" />
+                </container>
+            </container>
+            
+        </referenceContainer>
+
+        <!-- Footer -->
+        <referenceContainer name="footer">
+            <container name="footer.wrapper" htmlTag="div" htmlClass="footer__wrapper" before="-">
+                <!-- Footer Newsletter -->
+                <block class="Magento\Newsletter\Block\Subscribe" name="footer.newsletter" template="Magento_Newsletter::subscribe.phtml" before="-" />
+                <!-- Footer Menu -->
+                <container name="footer.container.one" htmlTag="div" htmlClass="footer__container footer__container--menu" before="footer.container.two">
+                    <block name="footer.menu" class="Snowdog\Menu\Block\Menu">
+                    <arguments>
+                        <argument name="menu" xsi:type="string">footer-menu</argument>
+                    </arguments>
+                    </block>
+                </container>
+            </container>
+        </referenceContainer>
+
+        <referenceContainer name="footer-container">
+            <!-- Footer copyright reviews cards -->
+            <block class="Magento\Theme\Block\Html\Footer" name="copyright" template="Magento_Theme::html/copyright.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="before.body.end">
+            <block name="account.menu.header" class="Snowdog\Menu\Block\Menu" after="-">
+                <arguments>
+                    <argument name="menu" xsi:type="string">account-menu-header</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <move element="minicart" destination="header.account.container" after="-" />
+        <move element="top.search" destination="header-wrapper" before="-"/>
+
+        <referenceBlock name="navigation.sections" remove="true" />
+        <!--<referenceContainer name="page.main.title" remove="true" />-->
+        <referenceContainer name="page.messages" remove="true" />
+        <referenceBlock name="footer_links" remove="true" />
+        <referenceBlock name="report.bugs" remove="true" />
+        <referenceBlock name="form.subscribe" remove="true" />
+        <referenceBlock name="social" remove="true" />
+        <referenceBlock name="authentication-popup" remove="true" />
+      
+    </body>
+</page>

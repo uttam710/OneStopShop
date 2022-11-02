@@ -1,0 +1,70 @@
+<?php /** @var \Snowdog\Menu\Block\Menu $block */ ?>
+<?php if ($block->getMenu()): ?>
+<?php
+    $menuClass = $block->getMenu()->getCssClass();
+    $identifier = $block->getMenu()->getIdentifier();
+    $storeCode = $this->helper(Pinpoint\ProductList\Helper\Data::class)->getStoreCode();
+?>
+
+    <nav class="<?= $menuClass ?>">
+        <?php if($menuClass == 'main-menu'): ?>
+            <div class="main-menu__topbar">
+                <span class="close-menu open nav-toggle"><span>Toggle Nav</span></span>
+            </div>
+        <?php endif; ?>
+        <ul class="<?= $menuClass ?>__list">
+            <?php foreach ($block->getNodes() as $node): ?>
+                <?php
+                    $childrenLevel = $node->getLevel() + 1;
+                    $children = $this->getNodes($childrenLevel, $node);
+                    $node->setIsParent((bool) $children);
+                    $parentClass = $children ? ' ' . $menuClass . '__item--parent' : '';
+                    $additionalClasses = $node->getClasses() ? ' ' . $node->getClasses() : '';
+                    $itemClasses = $parentClass . $additionalClasses;
+                ?>
+                <li class="<?= $menuClass ?>__item<?= $itemClasses ?>">
+                    <?php echo $block->renderMenuNode($node) ?>
+                    <?php echo $block->renderSubmenu($children, $node, $childrenLevel) ?>
+                </li>
+            <?php endforeach ?>
+            <?php if($identifier == 'main-menu'): ?>
+                <li class="<?= $menuClass ?>__item account-login">
+                    <a href="/shop/pro/customer/account/login"><?= __('Login to Pro Site'); ?></a>
+                </li>
+            <?php endif; ?>
+            <?php if($identifier == 'main-menu-pro'): ?>
+                <li class="<?= $menuClass ?>__item account-login">
+                    <a href="/shop/pro/customer/account"><?= __('My Pro Account'); ?></a>
+                </li>
+            <?php endif; ?>
+        </ul>
+        <?php if($identifier == 'main-menu-pro'): ?>
+            <a class="consumer-link" href="/shop"><?= __('Switch to Consumer Site'); ?></a>
+        <?php endif; ?>
+        <?php if($menuClass == 'main-menu'): ?>
+            <div class="menu-cms-block">
+            <?php echo $this->getLayout()
+                ->createBlock('Magento\Cms\Block\Block')
+                ->setBlockId('main-menu-cms')
+                ->toHtml();
+                ?>
+            </div>
+
+        <?php endif; ?>
+    </nav>
+    <?php if($menuClass == 'main-menu'): ?>
+        <div class="header-usp__container menu-usp">
+            <div class="header-usp">
+                <?php echo $this->getLayout()
+                    ->createBlock('Magento\Cms\Block\Block')
+                    ->setBlockId('header_usp')
+                    ->toHtml();
+                ?>
+            </div>
+        </div>
+        <div class="main-menu__underlay"></div>
+    <?php endif; ?>
+    <script>
+      require(['mainMenu']);
+    </script>
+<?php endif; ?>

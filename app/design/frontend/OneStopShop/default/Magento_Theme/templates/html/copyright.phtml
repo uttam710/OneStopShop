@@ -1,0 +1,22 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<div class="copyright-container">
+    <div class="copyright__wrapper">
+        <?php
+            echo$this->getLayout()
+            ->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId('oss-copyright-payment')
+            ->toHtml();
+        ?>
+    </div>
+</div>
+
+<!--<script
+src="https://www.paypal.com/sdk/js?client-id=AVWaYcWwATpIWc8Wj2bHQLu1j3ZSwVP34cTNkc0FVvBtx5fxkbTHurMX4VI6qDFONNBqcOqBy6izDxQz&currency=GBP&components=messages"
+data-namespace="PayPalSDK">
+</script>-->

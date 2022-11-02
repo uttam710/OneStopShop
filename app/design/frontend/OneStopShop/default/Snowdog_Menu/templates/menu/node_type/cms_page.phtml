@@ -1,0 +1,43 @@
+<?php /** @var \Snowdog\Menu\Block\NodeType\CmsPage $block */ ?>
+<?php
+$nodeId = $block->getId();
+$class = $block->getMenuClass();
+$pageUrl = $block->getPageUrl($nodeId);
+$pageUrl = $pageUrl ?: '#';
+$dataAttribute = '';
+$categoryNodeImage = $this->helper(Pinpoint\Snowdog\Helper\Image::class)->getImageUrl($block->getNodeImage());
+
+if ($block->getIsViewAllLink()) {
+  $title = $block->getTitle();
+  $classLink = $class . '__inner-link inner-list-header';
+} else {
+    $classLink = $block->getIsRoot() ? $class . '__link' : $class . '__inner-link';
+    $title = $block->getTitle();
+
+    if ($nodeId) {
+        $dataAttribute = ' data-menu="menu-' . $nodeId . '"';
+    }
+
+    if ($block->isCurrentPage($nodeId)) {
+        $classLink .= ' current';
+    }
+}
+?>
+
+<a href="<?= $pageUrl ?>"
+   class="<?= $classLink ?>"<?= $dataAttribute ?>
+>
+    <?php if($categoryNodeImage) : ?>
+        <div class="menu-item__icon">
+        <img src="<?= $categoryNodeImage; ?>" />
+        </div>
+    <?php endif; ?>
+    <span class="title">
+        <?= $title ?>
+        <?php if ($block->getIsParent() && !$block->getIsViewAllLink()): ?>
+        <span title="view more" class="<?= $class ?>__icon">
+                    
+        </span>
+        <?php endif ?>
+    </span>
+</a>

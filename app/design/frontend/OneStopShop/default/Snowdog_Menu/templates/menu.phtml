@@ -1,0 +1,129 @@
+<?php /** @var \Snowdog\Menu\Block\Menu $block */ ?>
+<?php if ($block->getMenu()): ?>
+    <?php $menuClass = $block->getMenu()->getCssClass()?>
+
+  <?php if($menuClass == 'main-nav__content'): ?>
+      <nav class="<?= $menuClass ?>">
+        <span class="ossnav back-button"><img src="<?php echo $this->getViewFileUrl('images/icons/nav/chevron.svg'); ?>" alt="Go Back"></span>
+        <!--<li class="njs-toggle-menu">
+            <input type="checkbox" id="njs-toggle-menu--toggle" class="njs-toggle-menu--toggle">
+            <label for="njs-toggle-menu--toggle" class="promo-active">
+            <span class="toggle-menu__toggle-menu-icon">
+              <span class="toggle-menu-icon__toggle-menu-icon-inner" aria-label="More menu options - sign in, view basket, call us, and email us"></span>
+            </span>
+            </label>
+        </li>-->
+
+        <div class="main-nav__content__links-area main-nav__content__links-area--tog">
+          <div class="oss-nav oss-nav--two">
+            <ul class="<?= $menuClass ?>__list">
+                  <?php foreach ($block->getNodes() as $node): ?>
+                    <?php
+                      $childrenLevel = $node->getLevel() + 1;
+                      $children = $block->getNodes($childrenLevel, $node);
+                      $node->setIsParent((bool) $children);
+                      $parentClass = $children ? ' ' . $menuClass . '__item--parent' : '';
+                      $additionalClasses = $node->getClasses() ? ' ' . $node->getClasses() : '';
+                      $itemClasses = $parentClass . $additionalClasses;
+
+                    ?>
+
+                    <li class="<?= $menuClass ?>__item <?= $itemClasses ?>">
+                      <?= $block->renderMenuNode($node); ?>
+                      <?= $block->renderSubmenu($children, $node, $childrenLevel)?>
+                    </li>
+                  <?php endforeach ?>
+            </ul>
+          </div>
+        </div>
+  <?php endif; ?>
+
+    <?php if($menuClass == 'oos-main-menu-footer'): ?>
+      <ul class="<?= $menuClass ?>__list">
+        <div id="menu-button__wrapper">
+          <a href="/shop/customer/account/login" class="btn btn--primary">Sign in</a>
+          <a href="/shop/customer/account/create/" class="btn btn--secondary">Register</a>
+        </div>
+        <?php foreach ($block->getNodes() as $node): ?>
+          <?php
+              $childrenLevel = $node->getLevel() + 1;
+              $children = $block->getNodes($childrenLevel, $node);
+              $node->setIsParent((bool) $children);
+              $parentClass = $children ? ' ' . $menuClass . '__item--parent' : '';
+              $additionalClasses = $node->getClasses() ? ' ' . $node->getClasses() : '';
+              $itemClasses = $parentClass . $additionalClasses;
+            ?>
+            <li class="<?= $menuClass ?>__item <?= $itemClasses ?>">
+              <?= $block->renderMenuNode($node); ?>
+              <?= $block->renderSubmenu($children, $node, $childrenLevel)?>
+            </li>
+        <?php endforeach ?>
+        <div class="mainmenu-footer__wrapper">
+          <div class="footer__socials">
+            <a href="#"><img src="<?php echo $this->getViewFileUrl('images/icons/icon-instagram.svg'); ?>"></a>
+            <a href="#"><img src="<?php echo $this->getViewFileUrl('images/icons/icon-tiktok.svg'); ?>"></a>
+            <p>Follow us</p>
+          </div>
+        </div>
+      </ul>
+      </nav>
+      <div class="menu-overlay"></div>
+    <?php endif; ?>
+
+  <?php if($menuClass == 'main-nav__content-learn'): ?>
+
+      <nav class="<?= $menuClass ?> hide">
+      <span class="ossnav back-button"><img src="<?php echo $this->getViewFileUrl('images/icons/nav/chevron.svg'); ?>" alt="Go Back"></span>
+
+      <div class="main-nav__content__links-area main-nav__content__links-area--tog">
+          <div class="oss-nav oss-nav--two">
+            <ul class="<?= $menuClass ?>__list">
+                <?php foreach ($block->getNodes() as $node): ?>
+                  <?php
+                    $childrenLevel = $node->getLevel() + 1;
+                    $children = $block->getNodes($childrenLevel, $node);
+                    $node->setIsParent((bool) $children);
+                    $parentClass = $children ? ' ' . $menuClass . '__item--parent' : '';
+                    $additionalClasses = $node->getClasses() ? ' ' . $node->getClasses() : '';
+                    $itemClasses = $parentClass . $additionalClasses;
+                  ?>
+
+                  <li class="<?= $menuClass ?>__item <?= $itemClasses ?>">
+                    <?= $block->renderMenuNode($node); ?>
+                    <?= $block->renderSubmenu($children, $node, $childrenLevel)?>
+                  </li>
+                <?php endforeach ?>
+            </ul>
+          </div>
+      </div>
+      
+      </nav>
+        
+  <?php endif; ?>
+
+<?php endif; ?>
+
+<?php if($menuClass == 'footer-menu'): ?>
+
+  <nav class="<?= $menuClass ?>">
+    <ul class="<?= $menuClass ?>__list">
+         <?php foreach ($block->getNodes() as $node): ?>
+           <?php
+             $childrenLevel = $node->getLevel() + 1;
+             $children = $block->getNodes($childrenLevel, $node);
+             $node->setIsParent((bool) $children);
+             $parentClass = $children ? ' ' . $menuClass . '__item--parent' : '';
+             $additionalClasses = $node->getClasses() ? ' ' . $node->getClasses() : '';
+             $itemClasses = $parentClass . $additionalClasses;
+
+           ?>
+
+           <li class="<?= $menuClass ?>__item <?= $itemClasses ?>">
+             <?= $block->renderMenuNode($node); ?>
+             <?= $block->renderSubmenu($children, $node, $childrenLevel)?>
+           </li>
+         <?php endforeach ?>
+   </ul>
+  </nav>
+
+<?php endif; ?>

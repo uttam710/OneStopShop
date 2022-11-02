@@ -1,0 +1,91 @@
+@font-face {
+    font-family: "PPEiko Thin";
+    src: url("../fonts/PPEiko-Thin.otf");
+} 
+@font-face {
+    font-family: "PPEiko Medium";
+    src: url("../fonts/PPEiko-Medium.otf");
+} 
+@font-face {
+    font-family: "PPEiko Heavy";
+    src: url("../fonts/PPEiko-Heavy.otf");
+} 
+
+//Set font size so 16px = 1.6rem
+html {
+    font-size: 62.5%;
+}
+
+
+body {
+    font-family: 'arboria', verdana, sans-serif;
+    font-weight: 100;
+    font-size: 1.6rem;
+}
+
+h1, h2, h3 {
+    font-family: 'PPEiko Medium', verdana, sans-serif;
+    margin-top: 0;
+}
+
+h4, h5, h6 {
+    font-family: 'arboria', verdana, sans-serif;
+    font-weight: 400;
+}
+
+h1 {
+    font-size: 3.5rem;
+    margin-bottom: 25px;
+    @media @desktop {
+        font-size: 6rem;
+        margin-bottom: 40px;
+    }
+}
+
+h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    @media @desktop {
+        font-size: 4rem;
+        margin-bottom: 30px;
+    }
+}
+
+h3 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    @media @desktop {
+        margin-bottom: 20px;
+    }
+}
+
+p {
+    line-height: 1.2;
+    margin: 0 0 20px 0;
+}
+
+a, a:link, a:visited {
+    color: @color-black;
+    font-weight: 400;
+    &:hover {
+        color: @nouveau-black-mid;
+    }
+}
+
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}
+
+span {
+    display: inline-block;
+}
+
+.grey-text {
+    color: @nouveau-black-mid;
+    font-weight: 400;
+}

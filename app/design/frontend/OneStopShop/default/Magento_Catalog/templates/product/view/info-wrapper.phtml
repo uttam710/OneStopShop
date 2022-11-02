@@ -1,0 +1,145 @@
+<?php
+
+use Pinpoint\BookingTraining\Model\Attribute\Source\KitType;
+use Pinpoint\BookingTraining\ViewModel\TrainingProduct;
+use NouveauLashes\CustomerTraining\Helper\Training;
+
+$storeId = $this->helper(Pinpoint\ProductList\Helper\Data::class)->getStore()->getStoreId();
+
+$product = $block->getProduct();
+$treatments = $product->getData('treatment');
+$trainingHelper = $this->helper(Training::class);
+
+$isTrainingProduct = $product->getIsTraining();
+/* @var $viewModel TrainingProduct */
+$viewModel = $block->getViewModel();
+if($viewModel) {
+    $onlineLocationId = $viewModel->getOnlineLocationId();
+    $kitLevelsJson = $viewModel->getKitLevelsJson($product);
+    $kitLevelsRetailJson = $viewModel->getKitLevelsJson($product, KitType::RETAIL_TYPE);
+    $onlineModuleId = $product->getModuleIdOnline() ?? null;
+    $onsiteModuleId = $product->getModuleIdOnsite() ?? null;
+    $onlineOnly = (!$onsiteModuleId && $onlineModuleId) ?? 0;
+    $onsiteOnly = (!$onlineModuleId && $onsiteModuleId) ?? 0;
+    $fromPrice = $viewModel->getFromPrice($product);
+    $fromPriceIncVat = $viewModel->getFromPriceIncVat($product);
+    $invisibleLocationOptionName = $viewModel->getInvisibleLocationOptionName();
+    $invisibleOnlineDateOptionName = $viewModel->getInvisibleOnlineDateOptionName();
+    $invisibleOnsiteDateOptionName = $viewModel->getInvisibleOnsiteDateOptionName();
+    $invisibleOnlineTimeOptionName = $viewModel->getInvisibleOnlineTimeOptionName();
+    $invisibleOnsiteTineOptionName = $viewModel->getInvisibleOnsiteTimeOptionName();
+    $invisibleOnlineEventIdName = $viewModel->getInvisibleOnlineEventIName();
+    $invisibleOnsiteEventIdName = $viewModel->getInvisibleOnsiteEventIName();
+    $isLMS = $product->getData('is_lms');
+    $LMSonline = $product->getData('online_only_lms');
+
+  //  echo 'here'  . $isLMS;
+}
+?>
+
+<div class="product--info__wrapper">
+    <?php echo $block->getChildHtml('page.main.title'); ?>
+    <?php echo $block->getChildHtml('product.info.overview'); ?>
+        <?php if($viewModel && $isTrainingProduct): ?>
+            <?php if($viewModel &&
+            $isTrainingProduct &&
+            $viewModel->isEnabled() &&
+            ($onlineModuleId !== null || $onsiteOnly || $isLMS == 1 || $LMSonline == 1) &&
+            ($onsiteModuleId !== null || $onlineOnly || $isLMS == 1 || $LMSonline == 1)): ?>
+
+            <div data-bind="scope: 'booking'">
+                <!-- ko template: getTemplate() -->
+                <!-- /ko -->
+            </div>
+
+            <script type="text/x-magento-init">
+                    {
+                        "*": {
+                            "Magento_Ui/js/core/app": {
+                                "components": {
+                                    "booking": {
+                                        "component": "Pinpoint_BookingTraining/js/view/booking",
+                                        "template": "Pinpoint_BookingTraining/booking",
+                                        "online_module_id": "<?php echo $onlineModuleId; ?>",
+                                        "onsite_module_id": "<?php echo $onsiteModuleId; ?>",
+                                        "isLMS": "<?php echo $isLMS; ?>",
+                                        "LMSonline": "<?php echo $LMSonline; ?>",
+                                        "from_price": "<?php echo $fromPrice; ?>",
+                                        "from_price_inc_vat": "<?php echo $fromPriceIncVat; ?>",
+                                        "kit_levels": <?php echo $kitLevelsJson; ?>,
+                                        "kit_levels_retail": <?php echo $kitLevelsRetailJson; ?>,
+                                        "online_location_id": <?php echo $onlineLocationId; ?>,
+                                        "invisible_location_option_name": "<?php echo $invisibleLocationOptionName; ?>",
+                                        "invisible_online_date_option_name": "<?php echo $invisibleOnlineDateOptionName; ?>",
+                                        "invisible_onsite_date_option_name": "<?php echo $invisibleOnsiteDateOptionName; ?>",
+                                        "invisible_online_time_option_name": "<?php echo $invisibleOnlineTimeOptionName; ?>",
+                                        "invisible_onsite_time_option_name": "<?php echo $invisibleOnsiteTineOptionName; ?>",
+                                        "invisible_online_event_id_name": "<?php echo $invisibleOnlineEventIdName; ?>",
+                                        "invisible_onsite_event_id_name": "<?php echo $invisibleOnsiteEventIdName; ?>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                </script>
+
+            <div id="booking-modal-overlay" style="display:none;">
+                <?php echo $block->getChildHtml('product.info.main'); ?>
+            </div>
+
+        <?php else: ?>
+            <div class="product-not-available-message"><?= __('The product is not available at the moment'); ?></div>
+        <?php endif; ?>
+    <?php else: ?>
+        <?php if ($storeId == 4): ?>
+            <div class="pro--wrapper" data-bind="scope: 'customer'">
+                <!-- ko ifnot: customer().firstname  -->
+                <div class="pro--container register-professionals" data-bind="afterRender: loggedOutIconReady">
+                    <h4><?= __('Exclusive to HD Brows stylists'); ?></h4>
+                    <p>
+                        <?= __('Oops, looks like this is just for our trained stylists. Already a #BrowBoss?'); ?>
+                    </p>
+
+                    <button class="plp-header__sign-in my-account-link--loggedOut action" data-bind="afterRender: loggedOutIconReady">
+                        <span><?= __('SIGN IN'); ?></span>
+                    </button>
+
+                    <div class="access--container">
+                        <p>
+                            <?= __('Want to get your hands on these brow goodies? Unlock them by training with us and joining our team of #BrowBosses.'); ?>
+                        </p>
+
+                        <a href="https://hdbrows.com/training/"><?= __('GET ACCESS'); ?></a>
+                    </div>
+                </div>
+
+                <!-- /ko -->
+
+                <!-- ko if: customer().firstname  -->
+              
+
+                <div style="display:none;" data-bind='afterRender: checkCustomerIsTrainedIn([<?= $treatments ?>], <?= $trainingHelper->getOptionsJson(); ?>, $element)'
+                     class="pdp-info-wrapper-container">
+                    <div class="product-info-main-container product-info-main-container--consumer">
+                        <!-- TrustBox widget - Product Mini -->
+                        <div class="trustpilot-widget" data-locale="en-GB" data-template-id="54d39695764ea907c0f34825" data-businessunit-id="609ae7d6d180ca0001794603" data-style-height="24px" data-style-width="100%" data-theme="light" data-sku="<?= $product->getSku(); ?>" data-no-reviews="show" data-scroll-to-list="true">
+                            <a href="https://uk.trustpilot.com/review/hdbrows.com" target="_blank" rel="noopener">Trustpilot</a>
+                        </div>
+                        <!-- End TrustBox widget -->
+                        <?php echo $block->getChildHtml('product.info.main'); ?>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+        <?php else: ?>
+            <div class="product-info-main-container product-info-main-container--consumer">
+                <!-- TrustBox widget - Product Mini -->
+                <!--<div class="trustpilot-widget" data-locale="en-GB" data-template-id="54d39695764ea907c0f34825" data-businessunit-id="609ae7d6d180ca0001794603" data-style-height="24px" data-style-width="100%" data-theme="light" data-sku="<?= $product->getSku(); ?>" data-no-reviews="show" data-scroll-to-list="true">
+                    <a href="https://uk.trustpilot.com/review/hdbrows.com" target="_blank" rel="noopener">Trustpilot</a>
+                </div>-->
+                <!-- End TrustBox widget -->
+                <?php echo $block->getChildHtml('product.info.main'); ?>
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>

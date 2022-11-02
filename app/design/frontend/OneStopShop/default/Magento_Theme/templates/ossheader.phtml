@@ -1,0 +1,316 @@
+
+	<li class="njs-toggle-menu">
+		<span id="close-menu"></span>
+		<input type="checkbox" id="njs-toggle-menu--toggle" class="njs-toggle-menu--toggle">
+			<label for="njs-toggle-menu--toggle" class="promo-active">
+			<span class="toggle-menu__toggle-menu-icon">
+				<span class="toggle-menu-icon__toggle-menu-icon-inner" aria-label="More menu options - sign in, view basket, call us, and email us"></span>
+			</span>
+			<!-- <span class="toggle-menu__toggle-menu-text">Menu</span> -->
+			</label>
+			<div id="oss" class="main-nav main-nav--promo-active">
+				<!-- Menu Tabs -->
+				<div class="tabs__wrapper">
+					<div class="tab active">
+						<div class="title">shop</div>
+					</div>
+					<div class="tab">
+						<div class="title">learn</div>
+					</div>
+				</div>
+			</div>
+	</li>
+
+<script>
+require(['jquery', 'jquery/ui'], function($){
+
+ jQuery(document).ready(function(){
+
+    jQuery(".njs-toggle-menu").click(function(){
+	  	jQuery(".njs-toggle-menu").addClass("toggle-menu--toggle");
+	  	jQuery(".toggle-menu__toggle-menu-icon").toggleClass("toggle-menu-icon--toggle");
+      	jQuery("body").toggleClass("body--nav-toggle");
+      	jQuery("body").toggleClass("body--nav-toggle--lock");
+      	jQuery("html").toggleClass("body--nav-toggle--lock");
+		jQuery(".main-nav").toggleClass("main-nav--toggle");
+	});
+
+	jQuery("#njs-toggle-menu--toggle").click(function(){
+		jQuery('.main-nav__content').removeClass('hide');
+		jQuery('.main-nav__content-learn').removeClass('show');
+		jQuery(".menu-overlay").addClass("show");
+	});
+
+	//Hide Tabs on child nav
+	jQuery(document).on("click" ,'.main-nav__content__link' , function(){
+		jQuery(".tabs__wrapper").addClass('hide');
+	});
+	jQuery(document).on("click" ,'.main-nav__content-learn__link' , function(){
+		jQuery(".tabs__wrapper").addClass('hide');
+	});
+
+	//Toggle active tab and show hide menu
+	jQuery('.tabs__wrapper .tab').click(function(e) {
+		jQuery(this).addClass('active').siblings().removeClass('active');
+		jQuery('.main-nav__content').toggleClass('hide');
+		jQuery('.main-nav__content-learn').toggleClass('show');
+	});
+
+	jQuery(document).on("click" ,'#close-menu' , function(){
+		jQuery(".njs-toggle-menu").removeClass("toggle-menu--toggle");
+		jQuery(".menu-overlay").removeClass("show")
+		jQuery(".tabs__wrapper .tab:nth-child(1)").addClass("active");
+		jQuery(".tabs__wrapper .tab:nth-child(2)").removeClass("active");
+	});
+	
+	jQuery('#njs-toggle-menu--toggle').prop('checked', false);
+
+	jQuery("#njs-toggle-menu--toggle").change(function(){
+		jQuery("body").toggleClass("body--nav-toggle--lock");
+		jQuery("html").toggleClass("body--nav-toggle--lock");
+    });
+
+		// Remove href from parents - so can't go to another page but opens child nav
+		jQuery("li.main-nav__content__item.main-nav__content__item--parent a.main-nav__content__link").removeAttr("href");
+		jQuery("a#parent").removeAttr("href");
+
+		// level 0 - show child items - opens the second tier of navigation
+		jQuery(".main-nav__content__item.main-nav__content__item--parent").click(function(){
+		jQuery(this).children('ul', 'li').addClass("show-items");
+		jQuery(this).siblings().addClass("nav-hide");
+		jQuery(this).addClass("show-shop-items");
+		jQuery('.ossnav.back-button').addClass("show-btn");
+		jQuery('.main-nav__content__links-area.main-nav__content__links-area--tog.footer').addClass("hide");
+		jQuery('#oss').animate({scrollTop: '0px'}, 0);
+	});
+
+	// Level 1 - show child items -opens a third tier of navigation
+	jQuery("li.main-nav__content__inner-item.main-nav__content__inner-item--level1.main-nav__content__inner-item--parent").click(function(){
+		jQuery(this).children().addClass("show-items");
+		jQuery(this).siblings().addClass("hide");
+		jQuery('a.main-nav__content__link').addClass("hide");
+		jQuery(this).addClass("toggle");
+		jQuery('li.main-nav__content__item.main-nav__content__item--parent.show-shop-items').addClass("toggle");
+});
+
+// // Back button fuctionality on nav
+jQuery("span.ossnav.back-button").click(function(){
+	// If level 2 is opened -- go back to level 1
+	if (jQuery("li.main-nav__content__inner-item.main-nav__content__inner-item--level1").children().hasClass('show-items')
+	&&
+	jQuery("li.main-nav__content__inner-item.main-nav__content__inner-item--level1").siblings().hasClass('hide'))  {
+
+		jQuery('li.main-nav__content__inner-item.main-nav__content__inner-item--level1').children().removeClass("show-items");
+		jQuery('li.main-nav__content__inner-item.main-nav__content__inner-item--level1').siblings().removeClass("hide");
+		jQuery('a.main-nav__content__link').removeClass("hide");
+		jQuery('li.main-nav__content__inner-item.main-nav__content__inner-item--level1.main-nav__content__inner-item--parent').removeClass("toggle");
+		jQuery('li.main-nav__content__item.main-nav__content__item--parent.show-shop-items').removeClass("toggle");
+
+	} else if
+	//	If level 1 is opened - go back to level 0
+			(jQuery(".main-nav__content__item.main-nav__content__item--parent").children('ul', 'li').hasClass('show-items')
+			&&
+			jQuery(".main-nav__content__item.main-nav__content__item--parent").siblings().hasClass("nav-hide"))  {
+
+				jQuery('.main-nav__content__item.main-nav__content__item--parent').children('ul', 'li').removeClass("show-items");
+				jQuery('.main-nav__content__item.main-nav__content__item--parent').siblings().removeClass("nav-hide");
+				jQuery('.main-nav__content__item.main-nav__content__item--parent').removeClass("show-shop-items");
+				jQuery('.ossnav.back-button').removeClass("show-btn");
+				jQuery(".tabs__wrapper").removeClass('hide');
+				jQuery('.main-nav__content__links-area.main-nav__content__links-area--tog.footer').removeClass("hide");
+			}
+});
+
+// level 0 - show child items -- bottom menu
+jQuery("li.oos-main-menu-footer__item.oos-main-menu-footer__item--parent").click(function(){
+jQuery(this).children('ul', 'li').addClass("show-items");
+jQuery(this).siblings().addClass("nav-hide");
+jQuery(this).addClass("show-items");
+		jQuery('.ossnav.back-button').addClass("show-btn");
+});
+
+// Level 1 - show child items -- bottom menu
+jQuery("li.oos-main-menu-footer__inner-item.oos-main-menu-footer__inner-item--level1.oos-main-menu-footer__inner-item--parent").click(function(){
+jQuery(this).children().addClass("show-items");
+jQuery(this).siblings().addClass("hide");
+// jQuery('a.main-nav__content__link').addClass("hide");
+jQuery(this).addClass("toggle");
+// jQuery('li.main-nav__content__item.main-nav__content__item--parent.show-shop-items').addClass("toggle");
+});
+
+// // Back button - bottom nav
+jQuery("span.ossnav.back-button").click(function(){
+	// If level 2 is opened -- go back to level 1
+	if (jQuery("li.oos-main-menu-footer__inner-item.oos-main-menu-footer__inner-item--level1.oos-main-menu-footer__inner-item--parent").children().hasClass('show-items')
+	&&
+	jQuery("li.oos-main-menu-footer__inner-item.oos-main-menu-footer__inner-item--level1.oos-main-menu-footer__inner-item--parent").siblings().hasClass('hide'))  {
+
+		jQuery('li.oos-main-menu-footer__inner-item.oos-main-menu-footer__inner-item--level1.oos-main-menu-footer__inner-item--parent').children().removeClass("show-items");
+		jQuery('li.oos-main-menu-footer__inner-item.oos-main-menu-footer__inner-item--level1.oos-main-menu-footer__inner-item--parent').siblings().removeClass("hide");
+		// jQuery('a.main-nav__content__link').removeClass("hide");
+		jQuery('li.oos-main-menu-footer__inner-item.oos-main-menu-footer__inner-item--level1.oos-main-menu-footer__inner-item--parent').removeClass("toggle");
+		// jQuery('li.main-nav__content__item.main-nav__content__item--parent.show-shop-items').removeClass("toggle");
+
+	} else if
+	//	If level 1 is opened - go back to level 0
+			(jQuery("li.oos-main-menu-footer__item.oos-main-menu-footer__item--parent").children('ul', 'li').hasClass('show-items')
+			&&
+			jQuery("li.oos-main-menu-footer__item.oos-main-menu-footer__item--parent").siblings().hasClass("nav-hide"))  {
+
+				jQuery('li.oos-main-menu-footer__item.oos-main-menu-footer__item--parent').children('ul', 'li').removeClass("show-items");
+				jQuery('li.oos-main-menu-footer__item.oos-main-menu-footer__item--parent').siblings().removeClass("nav-hide");
+				jQuery('li.oos-main-menu-footer__item.oos-main-menu-footer__item--parent').removeClass("show-items");
+				jQuery('.ossnav.back-button').removeClass("show-btn");
+			}
+});
+
+
+/****** LEARN Tabbed content ******/
+	// Remove href from parents - so can't go to another page but opens child nav
+	jQuery("li.main-nav__content-learn__item.main-nav__content__item--parent a.main-nav__content__link").removeAttr("href");
+	jQuery("a#parent").removeAttr("href");
+
+	// level 0 - show child items - opens the second tier of navigation
+	jQuery(".main-nav__content-learn__item.main-nav__content-learn__item--parent").click(function(){
+		jQuery(this).children('ul', 'li').addClass("show-items");
+		jQuery(this).siblings().addClass("nav-hide");
+		jQuery(this).addClass("show-shop-items");
+		jQuery('.ossnav.back-button').addClass("show-btn");
+		jQuery('.main-nav__content__links-area.main-nav__content__links-area--tog.footer').addClass("hide");
+
+	});
+
+	// Level 1 - show child items -opens a third tier of navigation
+	jQuery("li.main-nav__content-learn__inner-item.main-nav__content-learn__inner-item--level1.main-nav__content-learn__inner-item--parent").click(function(){
+		jQuery(this).children().addClass("show-items");
+		jQuery(this).siblings().addClass("hide");
+		jQuery('a.main-nav__content-learn__link').addClass("hide");
+		jQuery(this).addClass("toggle");
+		jQuery('li.main-nav__content-learn__item.main-nav__content-learn__item--parent.show-shop-items').addClass("toggle");
+	});
+	// // Back button fuctionality on nav
+jQuery("span.ossnav.back-button").click(function(){
+	// If level 2 is opened -- go back to level 1
+	if (jQuery("li.main-nav__content-learn__inner-item.main-nav__content-learn__inner-item--level1").children().hasClass('show-items')
+	&&
+	jQuery("li.main-nav__content-learn__inner-item.main-nav__content-learn__inner-item--level1").siblings().hasClass('hide'))  {
+
+		jQuery('li.main-nav__content-learn__inner-item.main-nav__content-learn__inner-item--level1').children().removeClass("show-items");
+		jQuery('li.main-nav__content-learn__inner-item.main-nav__content-learn__inner-item--level1').siblings().removeClass("hide");
+		jQuery('a.main-nav__content-learn__link').removeClass("hide");
+		jQuery('li.main-nav__content-learn__inner-item.main-nav__content-learn__inner-item--level1.main-nav__content-learn__inner-item--parent').removeClass("toggle");
+		jQuery('li.main-nav__content-learn__item.main-nav__content-learn__item--parent.show-shop-items').removeClass("toggle");
+
+	} else if
+	//	If level 1 is opened - go back to level 0
+			(jQuery(".main-nav__content-learn__item.main-nav__content-learn__item--parent").children('ul', 'li').hasClass('show-items')
+			&&
+			jQuery(".main-nav__content-learn__item.main-nav__content-learn__item--parent").siblings().hasClass("nav-hide"))  {
+
+				jQuery('.main-nav__content-learn__item.main-nav__content-learn__item--parent').children('ul', 'li').removeClass("show-items");
+				jQuery('.main-nav__content-learn__item.main-nav__content-learn__item--parent').siblings().removeClass("nav-hide");
+				jQuery('.main-nav__content-learn__item.main-nav__content-learn__item--parent').removeClass("show-shop-items");
+				jQuery('.ossnav.back-button').removeClass("show-btn");
+				jQuery(".tabs__wrapper").removeClass('hide');
+				jQuery('.main-nav__content__links-area.main-nav__content__links-area--tog.footer').removeClass("hide");
+			}
+});
+
+
+
+		/*Search Bar */
+
+		jQuery("li.search-toggle").click(function(){
+							$(".block-search").slideToggle();
+				if (! jQuery(".main-nav-head").hasClass('search-togglee')) {
+							jQuery('.main-nav-head').toggleClass("search-togglee");
+				} else {
+							jQuery('.main-nav-head').removeClass("search-togglee");
+				}
+
+		});
+
+		jQuery(".block-search .minisearch .close").click(function(){
+				if (jQuery(".main-nav-head").hasClass('search-togglee')) {
+						jQuery('.main-nav-head').removeClass("search-togglee");
+				}
+
+		});
+
+		/* Adapt nav height to current window height */
+		var height = $(window).height();
+		var width = $(window).width();
+		var minusExtras = 107;
+		var height = height - minusExtras;
+
+		if (width <= 767) {
+			$('.njs-toggle-menu .njs-toggle-menu--toggle + label + .main-nav, .njs-toggle-menu .oss-form .oss-form__form-group .njs-toggle-menu--toggle + .parsley-errors-list + .main-nav, .oss-form .oss-form__form-group .njs-toggle-menu .njs-toggle-menu--toggle + .parsley-errors-list + .main-nav').height(height);
+
+		} else {
+			var extras = 42;
+			var height = height + extras;
+			$('.njs-toggle-menu .njs-toggle-menu--toggle + label + .main-nav, .njs-toggle-menu .oss-form .oss-form__form-group .njs-toggle-menu--toggle + .parsley-errors-list + .main-nav, .oss-form .oss-form__form-group .njs-toggle-menu .njs-toggle-menu--toggle + .parsley-errors-list + .main-nav').height(height);
+		}
+
+
+  jQuery('input[type=radio]').change(function () {
+    radioname = jQuery(this).attr("name");
+    if (this.value == radioname + '_img_1') {
+      jQuery('img.' + radioname + '_img_1').show();
+      jQuery('img.' + radioname + '_img_2').hide();
+      jQuery('img.' + radioname + '_img_3').hide();
+      jQuery('img.' + radioname + '_img_4').hide();
+    }
+    else if (this.value == radioname + '_img_2') {
+      jQuery('img.' + radioname + '_img_2').show();
+      jQuery('img.' + radioname + '_img_1').hide();
+      jQuery('img.' + radioname + '_img_3').hide();
+      jQuery('img.' + radioname + '_img_4').hide();
+    }
+    else if (this.value == radioname + '_img_3') {
+      jQuery('img.' + radioname + '_img_3').show();
+      jQuery('img.' + radioname + '_img_1').hide();
+      jQuery('img.' + radioname + '_img_2').hide();
+      jQuery('img.' + radioname + '_img_4').hide();
+    }
+    else if (this.value == radioname + '_img_4') {
+      jQuery('img.' + radioname + '_img_4').show();
+      jQuery('img.' + radioname + '_img_1').hide();
+      jQuery('img.' + radioname + '_img_2').hide();
+      jQuery('img.' + radioname + '_img_3').hide();
+    }
+  });
+  jQuery(".popup__toggle").click(function(){
+    jQuery( this ).toggleClass('popup__toggle--toggle');
+    jQuery( 'html' ).toggleClass('lock');
+    jQuery( 'body' ).toggleClass('lock');
+  });
+
+
+  	//Moving main menu to toggle menu div
+  	jQuery(function() {
+		jQuery(".main-nav__content").detach().appendTo("#oss");
+		jQuery(".oos-main-menu-footer__list").detach().appendTo(".main-nav__content");
+		jQuery("nav.main-nav__content-learn").detach().appendTo("#oss");
+  	});
+
+	//Add class to menu item if contains an image
+	jQuery(function() {
+		jQuery('.main-nav__content__item a:has(.menu-item__icon)').addClass('icon');
+	  });
+	  
+	//Minicart  
+	jQuery("a.action.showcart").click(function(){
+	  jQuery(".block-minicart").addClass("open");
+	  jQuery(".menu-overlay").addClass("show");
+	});
+	jQuery("#close-minicart").click(function(){
+	  jQuery(".block-minicart").removeClass("open");
+	  jQuery(".menu-overlay").removeClass("show");
+	});
+	
+
+  });
+
+});
+</script>

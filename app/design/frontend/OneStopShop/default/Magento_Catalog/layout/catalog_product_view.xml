@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        <referenceContainer name="content">
+            <container name="product.main.wrapper" htmlTag="div" htmlClass="product-main__wrapper" before="-">
+                <container name="product.wrapper.left" htmlTag="div" htmlClass="product-media__wrapper" />
+
+                <container name="product.wrapper.right" htmlTag="div" htmlClass="product-info__wrapper">
+                    <container name="main.product.content" htmlTag="div" htmlClass="product--main">
+                        <block class="Magento\Catalog\Block\Product\View" name="product.info.wrapper" template="Magento_Catalog::product/view/info-wrapper.phtml" after="-" />
+                    </container>
+                    <block class="Magento\Catalog\Block\Product\View" name="product.whatisit" template="Magento_Catalog::product/view/info/what-is-it.phtml" after="-" />
+                    <block class="Magento\Catalog\Block\Product\View" name="product.highlight" template="Magento_Catalog::product/view/info/highlight.phtml" after="-" />
+                    <block class="Magento\Catalog\Block\Product\View" name="product.love.it" template="Magento_Catalog::product/view/info/why-love-it.phtml" after="-" />
+                    <block class="Magento\Catalog\Block\Product\View" name="product.retail.me.to" template="Magento_Catalog::product/view/info/retail-me-to.phtml" after="-" />
+                    <block class="Magento\Catalog\Block\Product\View" name="product.need.to.know" template="Magento_Catalog::product/view/info/need-to-know.phtml" after="-" />
+                    <block class="Magento\Catalog\Block\Product\View" name="product.save.with.sets" template="Magento_Catalog::product/view/info/save-with-sets.phtml" after="-" />
+                </container>
+            </container>
+
+            <container name="product.tabs.wrapper" htmlTag="div" htmlClass="product--wrapper__content" after="product.main.wrapper">
+                <block class="Magento\Catalog\Block\Product\View" name="product.course.overview" template="Magento_Catalog::product/view/tabs/training/course-overview.phtml" before="-" />
+                <block class="Magento\Catalog\Block\Product\View" name="product.brow.guide" template="Magento_Catalog::product/view/tabs/brow-guide.phtml" before="-" />
+                <block class="Magento\Catalog\Block\Product\View" name="product.look.book" template="Magento_Catalog::product/view/tabs/look-book.phtml" after="product.brow.guide" />
+                <block class="Pinpoint\FeaturesManager\Block\Features" name="product.accordion.ingredients" template="Magento_Catalog::product/view/tabs/ingredients.phtml" />
+                <block class="Magento\Catalog\Block\Product\View" name="product.accordion.reviews" template="Magento_Catalog::product/view/tabs/reviews.phtml" />
+            </container>
+
+            <referenceContainer name="content.aside">
+                <referenceBlock name="catalog.product.related">
+                    <block class="Magento\CatalogWidget\Block\Product\ProductsList" name="product-block-swatches" />
+                </referenceBlock>
+            </referenceContainer>
+        </referenceContainer>
+
+        <move element="product.info.media" destination="product.wrapper.left" before="-" />
+        <move element="page.main.title" destination="main.product.content" before="-"/>
+        <move element="product.info.overview" destination="main.product.content" after="page.main.title" />
+        <move element="product.info.main" destination="product.info.wrapper" before="-" />
+        <move element="bundle.options.container" destination="product.wrapper.right" before="product.info.main" />
+        <move element="ambanners.products.belowcart" destination="product.wrapper.right" after="main.product.content" />
+
+        <!-- removals -->
+        <referenceContainer name="skip_gallery_before.wrapper" remove="true" />
+        <referenceContainer name="skip_gallery_after.wrapper" remove="true" />
+        <referenceContainer name="product.info.stock.sku" remove="true" />
+        <referenceContainer name="product.info.social" remove="true" />
+        <referenceContainer name="product.info.details" remove="true" />
+
+        <referenceBlock name="product.info.sku" remove="true" />
+        <referenceBlock name="bundle.back.button" remove="true" />
+        <referenceBlock name="product.info.review" remove="true"/>
+        <referenceBlock name="customize_button" remove="true"/>
+        <referenceBlock name="product.features" remove="true"/>
+    </body>
+</page>

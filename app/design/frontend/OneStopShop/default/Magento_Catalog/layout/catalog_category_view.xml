@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        
+        <referenceContainer name="columns.top">
+          <container name="category.header" htmlTag="div" htmlClass="plp-header plp-header--shop">
+            <container name="category.header.block.1" htmlTag="div" htmlClass="plp-header__block plp-header__block--text">
+              <container name="category.header.block.1.container" htmlTag="div" htmlClass="plp-header__block-container plp-header__block-container--text">
+                <!-- <block class="Magento\Customer\Block\Account\AuthorizationLink" name="pro.plp.login" template="Magento_Catalog::category/pro-plp-login.phtml" /> -->
+              </container>
+            </container>
+            <container name="category.header.block.2" htmlTag="div" htmlClass="plp-header__block plp-header__block--categories">
+
+              <!-- <block class="Magento\Catalog\Block\Category\View" name="category.cms" template="Magento_Catalog::category/cms.phtml"/> -->
+              <block class="Magento\Catalog\Block\Category\View" name="category.sub.cats" template="Magento_Catalog::/category/sub-categories.phtml" after="-" />
+            </container>
+          </container>
+          <block class="Magento\Catalog\Block\Product\ProductList\Toolbar" name="plp.filter.and.sort" template="Magento_Catalog::/category/filter-by-sort-by.phtml" after="category.header" />
+        </referenceContainer>
+
+        <!-- <referenceContainer name="before.body.end">
+          <block class="Magento\Framework\View\Element\Template" name="plp.sortby.modal" template="Magento_Catalog::/product/list/toolbar-for-modal.phtml" after="-" />
+        </referenceContainer> -->
+        
+        <move element="breadcrumbs" destination="main" before="-" />
+        <move element="page.messages" destination="main" after="breadcrumbs"/>
+        <move element="page.main.title" destination="category.header.block.1.container" before="-" />
+        <move element="category.description" destination="category.header.block.1.container" after="page.main.title" />
+        <move element="category.cms" destination="category.header.block.1.container" after="category.description" />
+
+        <referenceBlock name="sidebar.additional" remove="true"/>
+        <referenceBlock name="category.product.addto.compare" remove="true" />
+    </body>
+</page>

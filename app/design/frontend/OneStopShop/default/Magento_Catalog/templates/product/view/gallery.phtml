@@ -1,0 +1,79 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * Product media data template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Gallery
+ */
+?>
+
+<?php
+$images = $block->getGalleryImages()->getItems();
+$mainImage = current(array_filter($images, function ($img) use ($block) {
+    return $block->isMainImage($img);
+}));
+
+if (!empty($images) && empty($mainImage)) {
+    $mainImage = $block->getGalleryImages()->getFirstItem();
+}
+
+$helper = $block->getData('imageHelper');
+$mainImageData = $mainImage ?
+    $mainImage->getData('medium_image_url') :
+    $helper->getDefaultPlaceholderUrl('image');
+
+?>
+
+<div class="gallery-placeholder _block-content-loading" data-gallery-role="gallery-placeholder">
+    <img
+        alt="main product photo"
+        class="gallery-placeholder__image"
+        src="<?= /* @noEscape */ $mainImageData ?>"
+    />
+</div>
+
+<?php echo $this->getLayout()->createBlock("Magento\Wishlist\Block\Catalog\Product\View\AddTo\Wishlist")->setTemplate("Magento_Wishlist::catalog/product/view/addto/wishlist.phtml")->toHtml() ?>
+
+<?php if (count($images) > 1): ?>
+    <div class="fotorama__nav fotorama__nav--dots" id="fotorama-external-dots">
+        <div class="fotorama__nav__shaft">
+            <?php for ($i = 0; $i < count($this->getGalleryImages()); $i++): ?>
+                <div class="fotorama__nav__frame fotorama__nav__frame--dot <?= $i === 0 ? 'fotorama__active' : '' ?>" tabindex="0" role="button">
+                    <div class="fotorama__dot" data-attribute="<?= $i ?>"></div>
+                </div>
+            <?php endfor; ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Catalog/js/gallery-dots": {
+                "gallery-selector": ".fotorama"
+            }
+        }
+    }
+</script>
+
+<?php if (count($images) > 1): ?>
+    <script type="text/x-magento-init">
+        {
+            "[data-gallery-role=gallery-placeholder]": {
+                "mage/gallery/gallery": {
+                    "mixins":["magnifier/magnify"],
+                    "magnifierOpts": <?= /* @noEscape */ $block->getMagnifier() ?>,
+                    "data": <?= /* @noEscape */ $block->getGalleryImagesJson() ?>,
+                    "options": <?= /* @noEscape */ $block->getGalleryOptions()->getOptionsJson() ?>,
+                    "fullscreen": <?= /* @noEscape */ $block->getGalleryOptions()->getFSOptionsJson() ?>,
+                     "breakpoints": <?= /* @noEscape */ $block->getBreakpoints() ?>
+                }
+            }
+        }
+    </script>
+<?php endif; ?>
