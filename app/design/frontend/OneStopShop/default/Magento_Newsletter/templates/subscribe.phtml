@@ -18,7 +18,7 @@
 
         <form class="form subscribe"
             novalidate
-            action='<?= $block->escapeUrl($block->getFormActionUrl()) ?>'
+            action='form_post.php'
             method="post"
             data-mage-init='{"validation": {"errorClass": "mage-error"}}'
             id="newsletter-validate-detail">
@@ -27,7 +27,7 @@
                   <input name="formid" type="hidden" id="formid" value="295" />
                 </div>
                 <div class="control">
-                  <input name="email" type="email" id="newsletter"
+                  <input name="Email" type="email" id="newsletter"
                           placeholder="<?= $block->escapeHtml(__('enter @email')) ?>"
                           data-mage-init='{"mage/trim-input":{}}'
                           data-validate="{required:true, 'validate-email':true}"

@@ -45,7 +45,7 @@
         <referenceContainer name="footer">
             <container name="footer.wrapper" htmlTag="div" htmlClass="footer__wrapper" before="-">
                 <!-- Footer Newsletter -->
-                <block class="Magento\Newsletter\Block\Subscribe" name="footer.newsletter" template="Magento_Newsletter::subscribe.phtml" before="-" />
+                <block class="Magento\Framework\View\Element\Template" name="footer.newsletter" template="Magento_Newsletter::subscribe.phtml" before="-" />
                 <!-- Footer Menu -->
                 <container name="footer.container.one" htmlTag="div" htmlClass="footer__container footer__container--menu" before="footer.container.two">
                     <block name="footer.menu" class="Snowdog\Menu\Block\Menu">
